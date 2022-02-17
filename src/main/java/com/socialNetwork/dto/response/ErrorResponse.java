@@ -5,11 +5,11 @@ import lombok.Data;
 @Data
 public class ErrorResponse extends ResponseWithMessage {
     public ErrorResponse(String message) {
-        super(message);
+        super(message, false);
     }
 
     public ErrorResponse(Exception exception) {
-        super(exception.getMessage());
+        super(exception.getMessage(), false);
     }
 
 }

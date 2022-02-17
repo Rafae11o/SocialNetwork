@@ -5,6 +5,6 @@ import lombok.Data;
 @Data
 public class SuccessResponse extends ResponseWithMessage{
     public SuccessResponse(String message) {
-        super(message);
+        super(message, true);
     }
 }
