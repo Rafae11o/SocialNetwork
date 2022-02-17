@@ -1,6 +1,7 @@
 package com.socialNetwork.controllers;
 
 import com.socialNetwork.dto.UserInfo;
+import com.socialNetwork.dto.response.SuccessResponse;
 import com.socialNetwork.exceptions.UserFriendlyException;
 import com.socialNetwork.security.jwt.JwtProvider;
 import com.socialNetwork.services.AuthService;
@@ -25,9 +26,9 @@ public class AuthController {
     }
 
     @PostMapping("/registration")
-    public ResponseEntity<Map<String, String>> registration(@RequestBody UserInfo userInfo) throws UserFriendlyException {
+    public ResponseEntity<SuccessResponse> registration(@RequestBody UserInfo userInfo) throws UserFriendlyException {
         authService.createUser(userInfo);
-        return ResponseEntity.ok(Map.of("msg", "Registered successfully"));
+        return ResponseEntity.ok(new SuccessResponse("Registered successfully"));
     }
 
     @GetMapping("/login")
