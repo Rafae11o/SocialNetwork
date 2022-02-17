@@ -1,8 +1,7 @@
 package com.socialNetwork.security.jwt;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import com.socialNetwork.exceptions.UserFriendlyException;
+import io.jsonwebtoken.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -33,9 +32,21 @@ public class JwtProvider {
                 .compact();
     }
 
-    public boolean validateToken(String token){
-        Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token);
-        return true;
+    public boolean validateToken(String token) throws UserFriendlyException {
+        try {
+            Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token);
+            return true;
+        } catch (ExpiredJwtException expEx) {
+            throw new UserFriendlyException( "Token expired");
+        } catch (UnsupportedJwtException unsEx) {
+            throw new UserFriendlyException("Unsupported jwt");
+        } catch (MalformedJwtException mjEx) {
+            throw new UserFriendlyException("Malformed jwt");
+        } catch (SignatureException sEx) {
+            throw new UserFriendlyException("Invalid signature");
+        } catch (Exception e) {
+            throw new UserFriendlyException("invalid token");
+        }
     }
 
     public String getLoginFromToken(String token){
