@@ -1,6 +1,6 @@
 package com.socialNetwork.services;
 
-import com.socialNetwork.dto.UserInfo;
+import com.socialNetwork.dto.RegistrationInfo;
 import com.socialNetwork.entities.user.User;
 import com.socialNetwork.exceptions.UserFriendlyException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +21,7 @@ public class AuthService {
      * @param userInfo - dto with name, login, password
      * @throws UserFriendlyException
      */
-    public void createUser(UserInfo userInfo) throws UserFriendlyException {
+    public void createUser(RegistrationInfo userInfo) throws UserFriendlyException {
         userService.create(userInfo);
     }
 

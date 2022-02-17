@@ -1,6 +1,6 @@
 package com.socialNetwork.entities.user;
 
-import com.socialNetwork.dto.UserInfo;
+import com.socialNetwork.dto.RegistrationInfo;
 import com.socialNetwork.entities.BaseEntity;
 import com.socialNetwork.entities.Post;
 import com.socialNetwork.exceptions.UserFriendlyException;
@@ -40,7 +40,7 @@ public class User extends BaseEntity {
     @OneToMany(mappedBy = "owner")
     private List<Post> postList;
 
-    public User(UserInfo userInfo) throws UserFriendlyException {
+    public User(RegistrationInfo userInfo) throws UserFriendlyException {
         setLogin(userInfo.getLogin());
         setPassword(userInfo.getPassword());
         setName(userInfo.getName());
@@ -55,7 +55,7 @@ public class User extends BaseEntity {
                 throw new UserFriendlyException("Name have to contain only letters");
             }
             nameInCorrectFormat.append(Converter.adjustCaseForName(namePartsToToCheck[i]));
-            if(i < namePartsToToCheck.length + 1){
+            if(i < namePartsToToCheck.length - 1){
                 nameInCorrectFormat.append(" ");
             }
         }

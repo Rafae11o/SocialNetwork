@@ -1,6 +1,6 @@
 package com.socialNetwork.services;
 
-import com.socialNetwork.dto.UserInfo;
+import com.socialNetwork.dto.RegistrationInfo;
 import com.socialNetwork.entities.user.User;
 import com.socialNetwork.exceptions.UserFriendlyException;
 import com.socialNetwork.repositories.UserRepository;
@@ -28,7 +28,7 @@ public class UserService {
         return PasswordEncoder.bCryptPasswordEncoder().matches(password, user.getPassword());
     }
 
-    public void create(UserInfo userInfo) throws UserFriendlyException {
+    public void create(RegistrationInfo userInfo) throws UserFriendlyException {
         User user = new User(userInfo);
         userRepository.save(user);
     }
