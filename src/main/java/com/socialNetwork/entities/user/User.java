@@ -2,6 +2,7 @@ package com.socialNetwork.entities.user;
 
 import com.socialNetwork.dto.UserInfo;
 import com.socialNetwork.entities.BaseEntity;
+import com.socialNetwork.entities.Post;
 import com.socialNetwork.exceptions.UserFriendlyException;
 import com.socialNetwork.helpers.Converter;
 import com.socialNetwork.helpers.Validator;
@@ -12,6 +13,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.List;
 
 @EqualsAndHashCode(callSuper = true)
 @Entity
@@ -34,6 +36,9 @@ public class User extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     private UserRole role;
+
+    @OneToMany(mappedBy = "owner")
+    private List<Post> postList;
 
     public User(UserInfo userInfo) throws UserFriendlyException {
         setLogin(userInfo.getLogin());
