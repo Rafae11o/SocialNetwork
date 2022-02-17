@@ -42,8 +42,8 @@ public class JwtFilter extends GenericFilterBean {
         String token = getTokenFromRequest((HttpServletRequest)servletRequest);
         try {
             if(token != null && jwtProvider.validateToken(token)){
-                String email = jwtProvider.getLoginFromToken(token);
-                CustomUserDetails customUserDetails = customUserDetailsService.loadUserByUsername(email);
+                String login = jwtProvider.getLoginFromToken(token);
+                CustomUserDetails customUserDetails = customUserDetailsService.loadUserByUsername(login);
                 UsernamePasswordAuthenticationToken auth =
                         new UsernamePasswordAuthenticationToken(customUserDetails, null, customUserDetails.getAuthorities());
                 SecurityContextHolder.getContext().setAuthentication(auth);

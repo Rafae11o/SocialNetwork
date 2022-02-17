@@ -2,14 +2,18 @@ package com.socialNetwork.security.jwt;
 
 import com.socialNetwork.exceptions.UserFriendlyException;
 import io.jsonwebtoken.*;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.util.Date;
 
 @Component
+@Slf4j
 public class JwtProvider {
     @Value("${jwt.secret}")
     private String jwtSecret;
@@ -24,7 +28,8 @@ public class JwtProvider {
      * @return - jwt token
      */
     public String generateToken(String login){
-        Date date = Date.from(LocalDateTime.now().plusSeconds(expirationTimeInSeconds).toInstant(ZoneOffset.of("+00:00")));
+        Date date = Date.from(LocalDateTime.now().plusSeconds(expirationTimeInSeconds).atZone(ZoneId.systemDefault()).toInstant());
+        log.info("Expiration date: {}, expiration time in seconds: {}", date, expirationTimeInSeconds);
         return Jwts.builder()
                 .setSubject(login)
                 .setExpiration(date)
