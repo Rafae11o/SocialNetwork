@@ -1,8 +1,8 @@
 package com.socialNetwork.controllers;
 
-import com.socialNetwork.dto.post.CommentInfo;
+import com.socialNetwork.dto.post.comment.CommentInfo;
 import com.socialNetwork.dto.post.EditRequest;
-import com.socialNetwork.dto.post.CreateCommentRequest;
+import com.socialNetwork.dto.post.comment.CreateCommentRequest;
 import com.socialNetwork.dto.response.SuccessResponse;
 import com.socialNetwork.dto.response.SuccessResponseWithData;
 import com.socialNetwork.exceptions.DeveloperException;

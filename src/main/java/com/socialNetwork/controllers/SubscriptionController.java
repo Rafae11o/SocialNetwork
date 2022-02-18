@@ -1,12 +1,11 @@
 package com.socialNetwork.controllers;
 
 import com.socialNetwork.dto.SubscribeRequest;
-import com.socialNetwork.dto.UserInfo;
+import com.socialNetwork.dto.user.UserInfo;
 import com.socialNetwork.dto.response.SuccessResponse;
 import com.socialNetwork.exceptions.DeveloperException;
 import com.socialNetwork.security.CustomUserDetails;
 import com.socialNetwork.services.SubscriptionService;
-import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;

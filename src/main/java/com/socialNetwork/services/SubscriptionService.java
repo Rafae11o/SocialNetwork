@@ -1,6 +1,6 @@
 package com.socialNetwork.services;
 
-import com.socialNetwork.dto.UserInfo;
+import com.socialNetwork.dto.user.UserInfo;
 import com.socialNetwork.entities.Subscription;
 import com.socialNetwork.entities.user.User;
 import com.socialNetwork.exceptions.DeveloperException;

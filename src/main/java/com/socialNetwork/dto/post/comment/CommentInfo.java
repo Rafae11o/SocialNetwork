@@ -1,6 +1,6 @@
-package com.socialNetwork.dto.post;
+package com.socialNetwork.dto.post.comment;
 
-import com.socialNetwork.dto.UserInfo;
+import com.socialNetwork.dto.user.UserInfo;
 import com.socialNetwork.entities.post.Comment;
 import lombok.Data;
 import lombok.NoArgsConstructor;

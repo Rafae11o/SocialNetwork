@@ -1,10 +1,12 @@
 package com.socialNetwork.services;
 
+import com.socialNetwork.dto.post.CreatePostRequest;
 import com.socialNetwork.dto.post.EditRequest;
 import com.socialNetwork.dto.post.PostDetails;
 import com.socialNetwork.dto.post.PostInfo;
 import com.socialNetwork.entities.post.Comment;
 import com.socialNetwork.entities.post.Post;
+import com.socialNetwork.entities.post.PostVisionPermission;
 import com.socialNetwork.entities.user.User;
 import com.socialNetwork.exceptions.DeveloperException;
 import com.socialNetwork.repositories.CommentRepository;
@@ -15,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -35,12 +38,12 @@ public class PostService {
     }
 
     @Transactional
-    public PostInfo createPost(Long owner_id, String text) throws Exception {
+    public PostInfo createPost(Long owner_id, CreatePostRequest postInfo) throws Exception {
         User user = userRepository.findById(owner_id).orElseThrow(() -> {
             String info = "Owner_id: " + owner_id;
             return new DeveloperException("PostService createPost", info);
         });
-        Post post = new Post(user, text);
+        Post post = new Post(user, postInfo);
         post = postRepository.save(post);
         return new PostInfo(post);
     }
@@ -86,5 +89,9 @@ public class PostService {
         }
         post.setText(editRequest.getText());
         return new PostInfo(postRepository.save(post));
+    }
+
+    public List<String> getAvailablePermission() {
+        return PostVisionPermission.names();
     }
 }

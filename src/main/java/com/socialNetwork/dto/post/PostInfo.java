@@ -1,6 +1,6 @@
 package com.socialNetwork.dto.post;
 
-import com.socialNetwork.dto.UserInfo;
+import com.socialNetwork.dto.user.UserInfo;
 import com.socialNetwork.entities.post.Post;
 import lombok.Data;
 

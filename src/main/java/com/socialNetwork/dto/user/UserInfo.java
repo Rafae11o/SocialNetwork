@@ -1,4 +1,4 @@
-package com.socialNetwork.dto;
+package com.socialNetwork.dto.user;
 
 import com.socialNetwork.entities.user.User;
 import lombok.Data;

@@ -1,6 +1,6 @@
 package com.socialNetwork.entities.post;
 
-import com.socialNetwork.dto.post.CreateCommentRequest;
+import com.socialNetwork.dto.post.comment.CreateCommentRequest;
 import com.socialNetwork.entities.BaseEntity;
 import com.socialNetwork.entities.user.User;
 import lombok.AllArgsConstructor;
@@ -18,11 +18,11 @@ public class Comment extends BaseEntity {
 
     private String text;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User owner;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id", nullable = false)
     private Post post;
 

@@ -25,12 +25,12 @@ public class SocialNetworkExceptionHandler extends ResponseEntityExceptionHandle
     @ExceptionHandler(DeveloperException.class)
     public ResponseEntity<ErrorResponse> handleDeveloperException(DeveloperException exception) {
         log.error("{}: {}", exception.getPlaceOfCode(), exception.getInfo());
-        return ResponseEntity.badRequest().body(new ErrorResponse(exception));
+        return ResponseEntity.internalServerError().body(new ErrorResponse(exception));
     }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleDeveloperExceptions(Exception exception){
         log.error("{}", exception.getMessage());
-        return ResponseEntity.badRequest().body(new ErrorResponse( "Error"));
+        return ResponseEntity.internalServerError().body(new ErrorResponse( "Error"));
     }
 }
