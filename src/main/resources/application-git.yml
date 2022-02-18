@@ -4,6 +4,8 @@ server:
   port: # port of your application
 
 dev-mode:
+  enable: false # true - enables dev mode
+  expirationTimeInSeconds: 2592000 # expiration time for jwt token for devmode
 
 # database configuration
 spring:

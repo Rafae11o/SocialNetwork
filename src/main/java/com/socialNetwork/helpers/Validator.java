@@ -9,7 +9,7 @@ public class Validator {
 
     private static Boolean devMode = false;
 
-    public Validator(@Value("${dev-mode}") Boolean devMode){
+    public Validator(@Value("${dev-mode.enable}") Boolean devMode){
         Validator.devMode = devMode;
     }
 

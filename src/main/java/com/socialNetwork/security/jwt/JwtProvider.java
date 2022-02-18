@@ -21,6 +21,12 @@ public class JwtProvider {
     @Value("${jwt.expirationTimeInSeconds}")
     private Long expirationTimeInSeconds;
 
+    @Value("${dev-mode.expirationTimeInSeconds}")
+    private Long expirationTimeInSecondsForDevMode;
+
+    @Value("${dev-mode.enable}")
+    private Boolean devMode;
+
     /**
      * Generate token by login
      * WARNING: Expiration time calculating in UTC
@@ -28,6 +34,7 @@ public class JwtProvider {
      * @return - jwt token
      */
     public String generateToken(String login){
+        Long expirationTimeInSeconds = devMode ? expirationTimeInSecondsForDevMode : this.expirationTimeInSeconds;
         Date date = Date.from(LocalDateTime.now().plusSeconds(expirationTimeInSeconds).atZone(ZoneId.systemDefault()).toInstant());
         log.info("Expiration date: {}, expiration time in seconds: {}", date, expirationTimeInSeconds);
         return Jwts.builder()
