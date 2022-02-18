@@ -1,20 +1,16 @@
 package com.socialNetwork.services;
 
-import com.socialNetwork.dto.RegistrationInfo;
 import com.socialNetwork.dto.user.UserFeed;
 import com.socialNetwork.entities.post.Post;
 import com.socialNetwork.entities.user.User;
 import com.socialNetwork.exceptions.DeveloperException;
-import com.socialNetwork.exceptions.UserFriendlyException;
 import com.socialNetwork.repositories.SubscriptionRepository;
 import com.socialNetwork.repositories.UserRepository;
-import com.socialNetwork.security.PasswordEncoder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class UserService {
@@ -34,7 +30,7 @@ public class UserService {
      * Get feed for unauthorized user
      * @param userId - whose feed wants to receive
      * @return user info that is available for unauthorized user
-     * @throws DeveloperException
+     * @throws DeveloperException if user with userId does not exist
      */
     @Transactional
     public UserFeed getFeed(Long userId) throws DeveloperException {
@@ -51,7 +47,7 @@ public class UserService {
      * @param currentUserId - user, who wants to get feed
      * @param userId - whose feed wants to receive
      * @return user info that is available for current user
-     * @throws DeveloperException
+     * @throws DeveloperException if user with userId does not exist
      */
     @Transactional
     public UserFeed getFeed(Long currentUserId, Long userId) throws DeveloperException {
@@ -59,7 +55,7 @@ public class UserService {
             String info = "User with id " + userId + " does not exist";
             return new DeveloperException(LOG_TAG + " getFeed", info);
         });
-        List<Post> posts = null;
+        List<Post> posts;
         // If user is subscriber
         if(userId.equals(currentUserId) || subscriptionRepository.existsBySubscriberIdAndUserId(currentUserId, userId)) {
             posts = userRepository.findPostsForSubscribedUsers(userId);

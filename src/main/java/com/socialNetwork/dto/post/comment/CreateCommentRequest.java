@@ -1,6 +1,5 @@
 package com.socialNetwork.dto.post.comment;
 
-import com.socialNetwork.entities.post.Comment;
 import lombok.Data;
 
 @Data

@@ -13,8 +13,6 @@ public class UserFeed {
     private UserInfo userInfo;
     private List<PostInfo> posts;
 
-    public UserFeed(){}
-
     /**
      *
      * @param user - user model

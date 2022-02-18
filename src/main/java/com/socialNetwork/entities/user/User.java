@@ -53,7 +53,7 @@ public class User extends BaseEntity {
 
     public void setName(String name) throws UserFriendlyException {
         String[] namePartsToToCheck = name.trim().split(" ");
-        StringBuilder nameInCorrectFormat = new StringBuilder("");
+        StringBuilder nameInCorrectFormat = new StringBuilder();
         for(int i = 0; i<namePartsToToCheck.length; i++){
             if(!Validator.getValidator().containsOnlyLetters(namePartsToToCheck[i])){
                 throw new UserFriendlyException("Name have to contain only letters");

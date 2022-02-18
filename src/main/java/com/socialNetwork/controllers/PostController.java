@@ -39,15 +39,6 @@ public class PostController {
         return ResponseEntity.ok(new SuccessResponseWithData<>(postInfo));
     }
 
-//    @GetMapping("/getAllPosts")
-//    public ResponseEntity<SuccessResponseWithData<List<PostInfo>>> getAllPosts() {
-//        CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication()
-//                .getPrincipal();
-//        Long id = userDetails.getId();
-//        List<PostInfo> posts = postService.findAllPosts(id);
-//        return ResponseEntity.ok(new SuccessResponseWithData<>(posts));
-//    }
-
     @GetMapping("/getPost")
     public ResponseEntity<SuccessResponseWithData<PostDetails>> getPost(@RequestParam Long id) throws Exception {
         PostDetails post = postService.findPost(id);

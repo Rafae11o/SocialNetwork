@@ -26,8 +26,8 @@ public enum PostVisionPermission {
     public static List<String> names() {
         PostVisionPermission[] permissions = values();
         List<String> names = new ArrayList<>();
-        for (int i = 0; i < permissions.length; i++) {
-            names.add(permissions[i].name());
+        for (PostVisionPermission postVisionPermission : permissions) {
+            names.add(postVisionPermission.name());
         }
         return names;
     }

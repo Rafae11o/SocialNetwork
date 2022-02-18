@@ -3,7 +3,6 @@ package com.socialNetwork.entities.post;
 import com.socialNetwork.dto.post.CreatePostRequest;
 import com.socialNetwork.entities.BaseEntity;
 import com.socialNetwork.entities.user.User;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
