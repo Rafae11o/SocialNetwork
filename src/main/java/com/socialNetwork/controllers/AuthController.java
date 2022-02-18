@@ -2,6 +2,7 @@ package com.socialNetwork.controllers;
 
 import com.socialNetwork.dto.RegistrationInfo;
 import com.socialNetwork.dto.response.SuccessResponse;
+import com.socialNetwork.dto.response.SuccessResponseWithData;
 import com.socialNetwork.exceptions.UserFriendlyException;
 import com.socialNetwork.security.jwt.JwtProvider;
 import com.socialNetwork.services.AuthService;
@@ -32,12 +33,11 @@ public class AuthController {
     }
 
     @GetMapping("/login")
-    public ResponseEntity<Map<String, String>> login(@RequestParam("login") String login,
-                                                     @RequestParam("password") String password) throws UserFriendlyException {
+    public ResponseEntity<SuccessResponseWithData<String>> login(@RequestParam("login") String login,
+                                                         @RequestParam("password") String password) throws UserFriendlyException {
         authService.login(login, password);
         String token = jwtProvider.generateToken(login);
-        return ResponseEntity.ok(Map.of("msg","Login successfully",
-                "token", token));
+        return ResponseEntity.ok(new SuccessResponseWithData<>(token));
     }
 
 }
