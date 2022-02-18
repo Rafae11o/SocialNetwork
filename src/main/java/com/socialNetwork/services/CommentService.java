@@ -1,9 +1,8 @@
 package com.socialNetwork.services;
 
-import com.socialNetwork.dto.post.CommentInfo;
+import com.socialNetwork.dto.post.comment.CommentInfo;
 import com.socialNetwork.dto.post.EditRequest;
-import com.socialNetwork.dto.post.CreateCommentRequest;
-import com.socialNetwork.dto.post.PostInfo;
+import com.socialNetwork.dto.post.comment.CreateCommentRequest;
 import com.socialNetwork.entities.post.Comment;
 import com.socialNetwork.entities.post.Post;
 import com.socialNetwork.entities.user.User;
@@ -16,7 +15,6 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -46,6 +44,9 @@ public class CommentService {
             String info = "Post with id " + userId + " not founded";
             return new DeveloperException(this.getClass().getName() + " " + "create", info);
         });
+        if(!post.isEnableComments()) {
+            throw new DeveloperException(LOG_TAG + " create", "Illegal comment creation");
+        }
         Comment comment = new Comment(user, post, commentInfo);
         comment = this.commentRepository.save(comment);
         return new CommentInfo(comment);
