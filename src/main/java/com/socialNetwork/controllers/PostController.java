@@ -1,7 +1,11 @@
 package com.socialNetwork.controllers;
 
-import com.socialNetwork.dto.PostInfo;
+import com.socialNetwork.dto.post.EditRequest;
+import com.socialNetwork.dto.post.PostDetails;
+import com.socialNetwork.dto.post.PostInfo;
 import com.socialNetwork.dto.response.SuccessResponse;
+import com.socialNetwork.dto.response.SuccessResponseWithData;
+import com.socialNetwork.exceptions.DeveloperException;
 import com.socialNetwork.security.CustomUserDetails;
 import com.socialNetwork.services.PostService;
 import lombok.extern.slf4j.Slf4j;
@@ -27,38 +31,48 @@ public class PostController {
     }
 
     @PostMapping
-    public ResponseEntity<SuccessResponse> createPost(@RequestBody PostInfo postInfo) throws Exception {
+    public ResponseEntity<SuccessResponseWithData<PostInfo>> createPost(@RequestBody Map<String, String> json) throws Exception {
         CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication()
                 .getPrincipal();
         Long id = userDetails.getId();
-        postService.createPost(id, postInfo);
-        return ResponseEntity.ok(new SuccessResponse("Post created successfully"));
+        if(!json.containsKey("text")) {
+            throw new DeveloperException(this.getClass().getName() + " createPost", "json does not contain 'text' field");
+        }
+        PostInfo postInfo = postService.createPost(id, json.get("text"));
+        return ResponseEntity.ok(new SuccessResponseWithData<>(postInfo));
     }
 
     @GetMapping("/getAllPosts")
-    public ResponseEntity<List<PostInfo>> getAllPosts() {
+    public ResponseEntity<SuccessResponseWithData<List<PostInfo>>> getAllPosts() {
         CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication()
                 .getPrincipal();
         Long id = userDetails.getId();
         List<PostInfo> posts = postService.findAllPosts(id);
-        return ResponseEntity.ok(posts);
+        return ResponseEntity.ok(new SuccessResponseWithData<>(posts));
     }
 
     @GetMapping("/getPost")
-    public ResponseEntity<PostInfo> getPost(@RequestParam Long id) throws Exception {
-        PostInfo post = postService.findPost(id);
-        return ResponseEntity.ok(post);
+    public ResponseEntity<SuccessResponseWithData<PostDetails>> getPost(@RequestParam Long id) throws Exception {
+        PostDetails post = postService.findPost(id);
+        return ResponseEntity.ok(new SuccessResponseWithData<>(post));
     }
 
     @PostMapping("/update")
-    public ResponseEntity<PostInfo> updatePost(@RequestBody PostInfo postInfo) throws Exception {
-        PostInfo updatedPost = postService.updatePost(postInfo);
-        return ResponseEntity.ok(updatedPost);
+    public ResponseEntity<SuccessResponseWithData<PostInfo>> updatePost(@RequestBody EditRequest editRequest) throws Exception {
+        CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication()
+                .getPrincipal();
+        Long userId = userDetails.getId();
+        PostInfo updatedPost = postService.updatePost(userId, editRequest);
+        return ResponseEntity.ok(new SuccessResponseWithData<>(updatedPost));
     }
 
     @DeleteMapping
-    public ResponseEntity<SuccessResponse> deletePost(@RequestParam Long id){
-        postService.deletePost(id);
+    public ResponseEntity<SuccessResponse> deletePost(@RequestParam("postId") Long postId) throws DeveloperException {
+        CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication()
+                .getPrincipal();
+        Long userId = userDetails.getId();
+        postService.deletePost(userId, postId);
         return ResponseEntity.ok(new SuccessResponse("Deleted successfully"));
     }
+
 }

@@ -2,7 +2,7 @@ package com.socialNetwork.entities.user;
 
 import com.socialNetwork.dto.RegistrationInfo;
 import com.socialNetwork.entities.BaseEntity;
-import com.socialNetwork.entities.Post;
+import com.socialNetwork.entities.post.Post;
 import com.socialNetwork.exceptions.UserFriendlyException;
 import com.socialNetwork.helpers.Converter;
 import com.socialNetwork.helpers.Validator;
@@ -37,7 +37,7 @@ public class User extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private UserRole role;
 
-    @OneToMany(mappedBy = "owner")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "owner")
     private List<Post> postList;
 
     public User(RegistrationInfo userInfo) throws UserFriendlyException {
@@ -45,6 +45,10 @@ public class User extends BaseEntity {
         setPassword(userInfo.getPassword());
         setName(userInfo.getName());
         setRole(UserRole.USER);
+    }
+
+    public void setLogin(String login){
+        this.login = login.trim();
     }
 
     public void setName(String name) throws UserFriendlyException {
