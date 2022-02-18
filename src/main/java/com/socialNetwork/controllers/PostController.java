@@ -1,5 +1,6 @@
 package com.socialNetwork.controllers;
 
+import com.socialNetwork.dto.post.CreatePostRequest;
 import com.socialNetwork.dto.post.EditRequest;
 import com.socialNetwork.dto.post.PostDetails;
 import com.socialNetwork.dto.post.PostInfo;
@@ -16,7 +17,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 @Controller
 @RequestMapping("/api/post")
@@ -31,25 +31,22 @@ public class PostController {
     }
 
     @PostMapping
-    public ResponseEntity<SuccessResponseWithData<PostInfo>> createPost(@RequestBody Map<String, String> json) throws Exception {
+    public ResponseEntity<SuccessResponseWithData<PostInfo>> createPost(@RequestBody CreatePostRequest createPostRequest) throws Exception {
         CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication()
                 .getPrincipal();
         Long id = userDetails.getId();
-        if(!json.containsKey("text")) {
-            throw new DeveloperException(this.getClass().getName() + " createPost", "json does not contain 'text' field");
-        }
-        PostInfo postInfo = postService.createPost(id, json.get("text"));
+        PostInfo postInfo = postService.createPost(id, createPostRequest);
         return ResponseEntity.ok(new SuccessResponseWithData<>(postInfo));
     }
 
-    @GetMapping("/getAllPosts")
-    public ResponseEntity<SuccessResponseWithData<List<PostInfo>>> getAllPosts() {
-        CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication()
-                .getPrincipal();
-        Long id = userDetails.getId();
-        List<PostInfo> posts = postService.findAllPosts(id);
-        return ResponseEntity.ok(new SuccessResponseWithData<>(posts));
-    }
+//    @GetMapping("/getAllPosts")
+//    public ResponseEntity<SuccessResponseWithData<List<PostInfo>>> getAllPosts() {
+//        CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication()
+//                .getPrincipal();
+//        Long id = userDetails.getId();
+//        List<PostInfo> posts = postService.findAllPosts(id);
+//        return ResponseEntity.ok(new SuccessResponseWithData<>(posts));
+//    }
 
     @GetMapping("/getPost")
     public ResponseEntity<SuccessResponseWithData<PostDetails>> getPost(@RequestParam Long id) throws Exception {
@@ -73,6 +70,11 @@ public class PostController {
         Long userId = userDetails.getId();
         postService.deletePost(userId, postId);
         return ResponseEntity.ok(new SuccessResponse("Deleted successfully"));
+    }
+
+    @GetMapping("/getAvailablePermission")
+    public ResponseEntity<List<String>> getAvailablePermission(){
+        return ResponseEntity.ok(postService.getAvailablePermission());
     }
 
 }

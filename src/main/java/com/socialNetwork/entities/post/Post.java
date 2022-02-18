@@ -1,5 +1,6 @@
 package com.socialNetwork.entities.post;
 
+import com.socialNetwork.dto.post.CreatePostRequest;
 import com.socialNetwork.entities.BaseEntity;
 import com.socialNetwork.entities.user.User;
 import lombok.AllArgsConstructor;
@@ -16,18 +17,26 @@ import java.util.List;
 @Data
 public class Post extends BaseEntity {
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User owner;
 
     private String text;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "post")
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "post")
     private List<Comment> comments;
 
-    public Post(User owner, String text) {
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private PostVisionPermission postVisionPermission;
+
+    private boolean enableComments;
+
+    public Post(User owner, CreatePostRequest postInfo) {
         this.owner = owner;
-        this.text = text;
+        this.text = postInfo.getText();
+        this.postVisionPermission = postInfo.getPermission();
+        this.enableComments = postInfo.isEnableComments();
         comments = new ArrayList<>();
     }
 
