@@ -27,6 +27,11 @@ public class SubscriptionService {
         this.userRepository = userRepository;
     }
 
+    /**
+     *
+     * @param userId - whose subscriptions we want to display
+     * @return subscription list
+     */
     public List<UserInfo> getSubscriptions(Long userId) {
         List<Subscription> subscriptions = subscriptionRepository.findAllBySubscriberId(userId);
         List<UserInfo> subscriptionsList = new ArrayList<>();
@@ -36,6 +41,11 @@ public class SubscriptionService {
         return subscriptionsList;
     }
 
+    /**
+     *
+     * @param id - whose subscribers we want to display
+     * @return list of subscribers
+     */
     public List<UserInfo> getSubscribers(Long id) {
         List<Subscription> subscriptions = subscriptionRepository.findAllByUserId(id);
         List<UserInfo> subscribers = new ArrayList<>();
@@ -45,6 +55,12 @@ public class SubscriptionService {
         return subscribers;
     }
 
+    /**
+     *
+     * @param userId - on whom user wants to subscribe
+     * @param subscriberId - who wants to subscribe
+     * @throws DeveloperException
+     */
     @Transactional
     public void subscribe(Long userId, Long subscriberId) throws DeveloperException {
         if(subscriptionRepository.existsBySubscriberIdAndUserId(subscriberId, userId)){
@@ -63,6 +79,11 @@ public class SubscriptionService {
         subscriptionRepository.save(subscription);
     }
 
+    /**
+     *
+     * @param userId - from whom wants to unsubscribe
+     * @param subscriberId - who wants to unsubscribe
+     */
     @Transactional
     public void unsubscribe(Long userId, Long subscriberId) {
         if(!subscriptionRepository.existsBySubscriberIdAndUserId(subscriberId, userId)){

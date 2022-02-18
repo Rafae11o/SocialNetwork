@@ -34,6 +34,13 @@ public class CommentService {
         LOG_TAG = this.getClass().getName();
     }
 
+    /**
+     * Create comment and return created comment by CommentInfo object
+     * @param userId - userId who create post
+     * @param commentInfo - comment info
+     * @return CommentInfo object
+     * @throws DeveloperException
+     */
     @Transactional
     public CommentInfo create(Long userId, CreateCommentRequest commentInfo) throws DeveloperException {
         User user = userRepository.findById(userId).orElseThrow(() -> {
@@ -52,6 +59,12 @@ public class CommentService {
         return new CommentInfo(comment);
     }
 
+    /**
+     *
+     * @param userId - who delete comment
+     * @param commentId
+     * @throws DeveloperException
+     */
     public void delete(Long userId, Long commentId) throws DeveloperException {
         Comment comment = commentRepository.findById(commentId).orElseThrow(() -> {
             String info = "Comment with id " + commentId + " not founded";
@@ -63,6 +76,13 @@ public class CommentService {
         commentRepository.deleteById(commentId);
     }
 
+    /**
+     *
+     * @param userId - who editing comment
+     * @param commentEditRequest
+     * @return updated text of comment
+     * @throws DeveloperException
+     */
     @Transactional
     public String edit(Long userId, EditRequest commentEditRequest) throws DeveloperException {
         Comment comment = commentRepository.findById(commentEditRequest.getId()).orElseThrow(() -> {
@@ -77,6 +97,11 @@ public class CommentService {
         return commentEditRequest.getText();
     }
 
+    /**
+     * Get comments by post id
+     * @param postId - id of the post, comments of which needs to return
+     * @return List of CommentInfo objects
+     */
     public List<CommentInfo> getComments(Long postId) {
         List<Comment> commentsData = commentRepository.findAllByPostId(postId);
         List<CommentInfo> comments = new ArrayList<>();

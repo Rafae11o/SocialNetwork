@@ -9,8 +9,8 @@ import java.util.List;
 
 public class PostDetails extends PostInfo{
 
-    private List<CommentInfo> comments;
-    private boolean enableComments;
+    private final List<CommentInfo> comments;
+    private final boolean enableComments;
 
     public PostDetails(Post post, List<Comment> comments) {
         super(post);

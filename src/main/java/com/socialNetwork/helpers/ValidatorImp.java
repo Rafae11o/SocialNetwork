@@ -19,12 +19,10 @@ public class ValidatorImp {
     }
 
     public boolean isPasswordValid(String password){
-//        System.out.println(devMode);
         return devMode || VALID_PASSWORD_REGEX.matcher(password).find();
     }
 
     public boolean containsOnlyLetters(String word){
-//        System.out.println(devMode);
         return devMode || CONTAINS_ONLY_CHARACTERS.matcher(word).find();
     }
 }

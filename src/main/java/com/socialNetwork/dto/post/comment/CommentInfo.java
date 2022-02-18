@@ -16,6 +16,9 @@ public class CommentInfo {
     private Date created;
     private String text;
 
+    /**
+     * @param comment
+     */
     public CommentInfo(Comment comment) {
         this.id = comment.getId();
         this.ownerInfo = new UserInfo(comment.getOwner());

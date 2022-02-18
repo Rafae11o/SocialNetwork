@@ -4,6 +4,9 @@ import lombok.Data;
 
 @Data
 public class ErrorResponse extends ResponseWithMessage {
+    /**
+     * @param message - to display to the user
+     */
     public ErrorResponse(String message) {
         super(message, false);
     }

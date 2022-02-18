@@ -26,7 +26,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers("/api/user/getFeedForUnauthorizedUser").permitAll()
+                .antMatchers("/api/user/getFeedForUnauthorizedUser").permitAll() // For unauthorized user to see posts
                 .antMatchers("/api/auth/*").permitAll()
                 .anyRequest().authenticated()
                 .and()

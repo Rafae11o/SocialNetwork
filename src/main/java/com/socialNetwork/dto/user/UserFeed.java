@@ -15,6 +15,11 @@ public class UserFeed {
 
     public UserFeed(){}
 
+    /**
+     *
+     * @param user - user model
+     * @param posts - list of user's posts
+     */
     public UserFeed(User user, List<Post> posts){
         userInfo = new UserInfo(user);
         this.posts = new ArrayList<>();

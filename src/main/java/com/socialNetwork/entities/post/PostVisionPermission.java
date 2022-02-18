@@ -20,6 +20,9 @@ public enum PostVisionPermission {
         return permission;
     }
 
+    /**
+     * @return all values of enumeration;
+     */
     public static List<String> names() {
         PostVisionPermission[] permissions = values();
         List<String> names = new ArrayList<>();

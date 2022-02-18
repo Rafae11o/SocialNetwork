@@ -17,7 +17,6 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -37,6 +36,13 @@ public class PostService {
         LOG_TAG = this.getClass().getName();
     }
 
+    /**
+     *
+     * @param owner_id - owner of post
+     * @param postInfo
+     * @return created post
+     * @throws Exception
+     */
     @Transactional
     public PostInfo createPost(Long owner_id, CreatePostRequest postInfo) throws Exception {
         User user = userRepository.findById(owner_id).orElseThrow(() -> {
@@ -48,7 +54,12 @@ public class PostService {
         return new PostInfo(post);
     }
 
-    @Transactional
+    /**
+     *
+     * @param id - post id
+     * @return post details(comments included)
+     * @throws Exception
+     */
     public PostDetails findPost(Long id) throws Exception {
         Post post = postRepository.findById(id).orElseThrow(() -> {
             String info = "Post id: " + id;
@@ -58,15 +69,7 @@ public class PostService {
         return new PostDetails(post, comments);
     }
 
-    public List<PostInfo> findAllPosts(Long id) {
-        List<Post> userPosts = postRepository.findByOwnerId(id);
-        List<PostInfo> posts = new ArrayList<>();
-        for(Post post : userPosts){
-            posts.add(new PostInfo(post));
-        }
-        return posts;
-    }
-
+    @Transactional
     public void deletePost(Long userId, Long postId) throws DeveloperException {
         Post post = postRepository.findById(postId).orElseThrow(() -> {
             String info = "Post id: " + postId;
@@ -91,6 +94,10 @@ public class PostService {
         return new PostInfo(postRepository.save(post));
     }
 
+    /**
+     *
+     * @return permissions that can be assigned to post
+     */
     public List<String> getAvailablePermission() {
         return PostVisionPermission.names();
     }

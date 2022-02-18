@@ -30,19 +30,12 @@ public class UserService {
         this.subscriptionRepository = subscriptionRepository;
     }
 
-    public Optional<User> getUserByLogin(String login) {
-        return userRepository.findByLogin(login);
-    }
-
-    public boolean checkPassword(String password, User user){
-        return PasswordEncoder.bCryptPasswordEncoder().matches(password, user.getPassword());
-    }
-
-    public void create(RegistrationInfo userInfo) throws UserFriendlyException {
-        User user = new User(userInfo);
-        userRepository.save(user);
-    }
-
+    /**
+     * Get feed for unauthorized user
+     * @param userId - whose feed wants to receive
+     * @return user info that is available for unauthorized user
+     * @throws DeveloperException
+     */
     @Transactional
     public UserFeed getFeed(Long userId) throws DeveloperException {
         User user = userRepository.findById(userId).orElseThrow(() -> {
@@ -53,6 +46,13 @@ public class UserService {
         return new UserFeed(user, posts);
     }
 
+    /**
+     * Get feed for authorized user or subscriber
+     * @param currentUserId - user, who wants to get feed
+     * @param userId - whose feed wants to receive
+     * @return user info that is available for current user
+     * @throws DeveloperException
+     */
     @Transactional
     public UserFeed getFeed(Long currentUserId, Long userId) throws DeveloperException {
         User user = userRepository.findById(userId).orElseThrow(() -> {
@@ -60,6 +60,7 @@ public class UserService {
             return new DeveloperException(LOG_TAG + " getFeed", info);
         });
         List<Post> posts = null;
+        // If user is subscriber
         if(userId.equals(currentUserId) || subscriptionRepository.existsBySubscriberIdAndUserId(currentUserId, userId)) {
             posts = userRepository.findPostsForSubscribedUsers(userId);
         } else {
