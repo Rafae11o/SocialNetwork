@@ -43,19 +43,24 @@ public class UserService {
         userRepository.save(user);
     }
 
-    // Get feed for unauthorized users;
     @Transactional
     public UserFeed getFeed(Long userId) throws DeveloperException {
-        User user = userRepository.findById(userId).orElseThrow(() -> new DeveloperException("something"));
+        User user = userRepository.findById(userId).orElseThrow(() -> {
+            String info = "User with id " + userId + " does not exist";
+            return new DeveloperException(LOG_TAG + " getFeed", info);
+        });
         List<Post> posts = userRepository.findPostsForEveryone(userId);
         return new UserFeed(user, posts);
     }
 
     @Transactional
     public UserFeed getFeed(Long currentUserId, Long userId) throws DeveloperException {
-        User user = userRepository.findById(userId).orElseThrow(() -> new DeveloperException("something"));
+        User user = userRepository.findById(userId).orElseThrow(() -> {
+            String info = "User with id " + userId + " does not exist";
+            return new DeveloperException(LOG_TAG + " getFeed", info);
+        });
         List<Post> posts = null;
-        if(subscriptionRepository.existsBySubscriberIdAndUserId(currentUserId, userId)) {
+        if(userId.equals(currentUserId) || subscriptionRepository.existsBySubscriberIdAndUserId(currentUserId, userId)) {
             posts = userRepository.findPostsForSubscribedUsers(userId);
         } else {
             posts = userRepository.findPostsForAuthorizedUsers(userId);
