@@ -1,0 +1,37 @@
+server:
+  port: 3000 # port of your application
+
+dev-mode:
+  enable: true
+  expirationTimeInSeconds: 900
+
+# database configuration
+spring:
+  jpa:
+    hibernate:
+      # create-drop - will drop your database every time when you start application
+      # update will - only update your database
+      ddl-auto: create-drop
+#      ddl-auto: update
+  datasource:
+    url: "jdbc:postgresql://localhost:5432/socialNetwork" # url to database
+    username: postgres # database username
+    password: 1234 # database password
+
+# JWT configuration
+jwt:
+  secret: "terces" # secret word for encrypting jwt token
+  expirationTimeInSeconds: 900 # expiration time for jwt token in seconds
+  headerFiledName: "JWT_TOKEN" # Header field name for token
+  tokenStartWord: "Bearer_" # Start word for token
+
+logging:
+  file:
+    path: logs
+  pattern:
+    file: "%d [%thread] %-5level %logger{36} - %msg%n"
+  logback:
+    rollingpolicy:
+      max-file-size: "10MB"
+      file-name-pattern: SocialNetwork-%d{yyyy-MM-dd}.%i.log.gz
+      max-history: 1
