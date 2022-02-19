@@ -10,6 +10,8 @@ import com.socialNetwork.exceptions.DeveloperException;
 import com.socialNetwork.repositories.CommentRepository;
 import com.socialNetwork.repositories.PostRepository;
 import com.socialNetwork.repositories.UserRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -45,14 +47,14 @@ public class CommentService {
     public CommentInfo create(Long userId, CreateCommentRequest commentInfo) throws DeveloperException {
         User user = userRepository.findById(userId).orElseThrow(() -> {
             String info = "User with id " + userId + " not founded";
-            return new DeveloperException(LOG_TAG + " " + "create", info);
+            return new DeveloperException(LOG_TAG + " [create method]", info);
         });
         Post post = postRepository.findById(commentInfo.getPostId()).orElseThrow(() -> {
             String info = "Post with id " + userId + " not founded";
-            return new DeveloperException(this.getClass().getName() + " " + "create", info);
+            return new DeveloperException(this.getClass().getName() + " [create method]", info);
         });
         if(!post.isEnableComments()) {
-            throw new DeveloperException(LOG_TAG + " create", "Illegal comment creation");
+            throw new DeveloperException(LOG_TAG + " [create method]", "Illegal comment creation");
         }
         Comment comment = new Comment(user, post, commentInfo);
         comment = this.commentRepository.save(comment);
@@ -68,10 +70,10 @@ public class CommentService {
     public void delete(Long userId, Long commentId) throws DeveloperException {
         Comment comment = commentRepository.findById(commentId).orElseThrow(() -> {
             String info = "Comment with id " + commentId + " not founded";
-            return new DeveloperException(LOG_TAG + " edit", info);
+            return new DeveloperException(LOG_TAG + " [delete method]", info);
         });
         if(!Objects.equals(comment.getOwner().getId(), userId)) {
-            throw new DeveloperException(LOG_TAG + " updatePost", "Illegal request");
+            throw new DeveloperException(LOG_TAG + " delete method", "Illegal request");
         }
         commentRepository.deleteById(commentId);
     }
@@ -87,10 +89,10 @@ public class CommentService {
     public String edit(Long userId, EditRequest commentEditRequest) throws DeveloperException {
         Comment comment = commentRepository.findById(commentEditRequest.getId()).orElseThrow(() -> {
             String info = "Comment with id " + commentEditRequest.getId() + " not founded";
-            return new DeveloperException(LOG_TAG + " edit", info);
+            return new DeveloperException(LOG_TAG + " [edit method]", info);
         });
         if(!Objects.equals(comment.getOwner().getId(), userId)) {
-            throw new DeveloperException(LOG_TAG + " updatePost", "Illegal request");
+            throw new DeveloperException(LOG_TAG + " [edit method]", "Illegal request");
         }
         comment.setText(commentEditRequest.getText());
         commentRepository.save(comment);

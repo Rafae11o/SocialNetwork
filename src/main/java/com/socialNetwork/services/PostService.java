@@ -46,8 +46,8 @@ public class PostService {
     @Transactional
     public PostInfo createPost(Long owner_id, CreatePostRequest postInfo) throws Exception {
         User user = userRepository.findById(owner_id).orElseThrow(() -> {
-            String info = "Owner_id: " + owner_id;
-            return new DeveloperException("PostService createPost", info);
+            String info = "User with id " + owner_id + " not founded";
+            return new DeveloperException(LOG_TAG + " [createPost method]", info);
         });
         Post post = new Post(user, postInfo);
         post = postRepository.save(post);
@@ -62,8 +62,8 @@ public class PostService {
      */
     public PostDetails findPost(Long id) throws Exception {
         Post post = postRepository.findById(id).orElseThrow(() -> {
-            String info = "Post id: " + id;
-            return new DeveloperException("PostService findPost", info);
+            String info = "POst with id " + id + " not founded";
+            return new DeveloperException(LOG_TAG + " [findPost method]", info);
         });
         List<Comment> comments = commentRepository.findAllByPostId(id);
         return new PostDetails(post, comments);
@@ -72,11 +72,11 @@ public class PostService {
     @Transactional
     public void deletePost(Long userId, Long postId) throws DeveloperException {
         Post post = postRepository.findById(postId).orElseThrow(() -> {
-            String info = "Post id: " + postId;
-            return new DeveloperException("PostService deletePost", info);
+            String info = "Post with id " + postId + " not founded";
+            return new DeveloperException(LOG_TAG + " [deletePost method]", info);
         });
         if(!Objects.equals(post.getOwner().getId(), userId)) {
-            throw new DeveloperException(LOG_TAG + " updatePost", "Illegal request");
+            throw new DeveloperException(LOG_TAG + " [deletePost method]", "Illegal request");
         }
         postRepository.deleteById(postId);
     }
@@ -84,11 +84,11 @@ public class PostService {
     @Transactional
     public PostInfo updatePost(Long userId, EditRequest editRequest) throws Exception {
         Post post = postRepository.findById(editRequest.getId()).orElseThrow(() -> {
-            String info = "Post id: " + editRequest.getId();
-            return new DeveloperException("PostService updatePost", info);
+            String info = "Post with id " + editRequest.getId() + " not founded";
+            return new DeveloperException(LOG_TAG + " [updatePost method]", info);
         });
         if(!Objects.equals(post.getOwner().getId(), userId)) {
-            throw new DeveloperException(LOG_TAG + " updatePost", "Illegal request");
+            throw new DeveloperException(LOG_TAG + " [updatePost method]", "Illegal request");
         }
         post.setText(editRequest.getText());
         return new PostInfo(postRepository.save(post));

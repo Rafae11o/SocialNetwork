@@ -6,6 +6,8 @@ import com.socialNetwork.dto.response.SuccessResponse;
 import com.socialNetwork.exceptions.DeveloperException;
 import com.socialNetwork.security.CustomUserDetails;
 import com.socialNetwork.services.SubscriptionService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -17,6 +19,8 @@ import java.util.List;
 @Controller
 @RequestMapping("/api/subscription")
 public class SubscriptionController {
+
+    private static final Logger logger = LoggerFactory.getLogger(PostController.class);
 
     private final SubscriptionService subscriptionService;
 
@@ -30,6 +34,7 @@ public class SubscriptionController {
         CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication()
                 .getPrincipal();
         Long userId = userDetails.getId();
+        logger.info("[getSubscriptions method] for user with id from token: {}", userId);
         List<UserInfo> subscriptions = subscriptionService.getSubscriptions(userId);
         return ResponseEntity.ok(subscriptions);
     }
@@ -39,6 +44,7 @@ public class SubscriptionController {
         CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication()
                 .getPrincipal();
         Long userId = userDetails.getId();
+        logger.info("[getSubscribers method] for user with id from token: {}", userId);
         List<UserInfo> subscribers = subscriptionService.getSubscribers(userId);
         return ResponseEntity.ok(subscribers);
     }
@@ -48,11 +54,11 @@ public class SubscriptionController {
         CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication()
                 .getPrincipal();
         Long subscriberId = userDetails.getId();
-        System.out.println("subscribeRequest: " + subscribeRequest.getSubscriptionId());
-        System.out.println("subscriberId: " + subscriberId);
+        logger.info("[subscribe method] RequestBody SubscribeRequest: {}, subscriberId from token: {}", subscribeRequest, subscriberId);
         if(subscribeRequest.getSubscriptionId().equals(subscriberId)) {
             throw new DeveloperException("Subscription controller", "Users id are equal");
         }
+        logger.info("Subscribed successfully");
         subscriptionService.subscribe(subscribeRequest.getSubscriptionId(), subscriberId);
         return ResponseEntity.ok(new SuccessResponse("Subscribed successfully"));
     }
@@ -62,7 +68,9 @@ public class SubscriptionController {
         CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication()
                 .getPrincipal();
         Long subscriberId = userDetails.getId();
+        logger.info("[unsubscribe method] RequestParam subscriptionId: {}, subscriberId from token: {}", subscriptionId, subscriberId);
         subscriptionService.unsubscribe(subscriptionId, subscriberId);
+        logger.info("Unsubscribe successfully");
         return ResponseEntity.ok(new SuccessResponse("Unsubscribe successfully"));
     }
 

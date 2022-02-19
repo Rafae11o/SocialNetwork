@@ -23,3 +23,14 @@ jwt:
   secret: # secret word for encrypting jwt token
   expirationTimeInSeconds: # expiration time for jwt token in seconds
   headerFiledName: # Header field name for token
+
+logging:
+  file:
+    path: logs
+  pattern:
+    file: "%d [%thread] %-5level %logger{36} - %msg%n"
+  logback:
+    rollingpolicy:
+      max-file-size: "10MB"
+      file-name-pattern: SocialNetwork-%d{yyyy-MM-dd}.%i.log.gz
+      max-history: 1

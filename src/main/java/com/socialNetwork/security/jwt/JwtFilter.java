@@ -7,6 +7,8 @@ import com.socialNetwork.exceptions.UserFriendlyException;
 import com.socialNetwork.security.CustomUserDetails;
 import com.socialNetwork.security.CustomUserDetailsService;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -25,6 +27,8 @@ import java.io.IOException;
 @Component
 @Slf4j
 public class JwtFilter extends GenericFilterBean {
+
+    private static Logger logger = LoggerFactory.getLogger(JwtFilter.class);
 
     private final JwtProvider jwtProvider;
     private final CustomUserDetailsService customUserDetailsService;
@@ -59,7 +63,7 @@ public class JwtFilter extends GenericFilterBean {
 
     private String getTokenFromRequest(HttpServletRequest request){
         String token = request.getHeader(headerFiledName);
-        log.info("Token from header: {}", token);
+        logger.info("Token from header: {}", token);
         return token;
     }
 

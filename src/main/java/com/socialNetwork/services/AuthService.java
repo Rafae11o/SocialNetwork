@@ -1,15 +1,20 @@
 package com.socialNetwork.services;
 
+import com.socialNetwork.controllers.UserController;
 import com.socialNetwork.dto.RegistrationInfo;
 import com.socialNetwork.entities.user.User;
 import com.socialNetwork.exceptions.UserFriendlyException;
 import com.socialNetwork.repositories.UserRepository;
 import com.socialNetwork.security.PasswordEncoder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class AuthService {
+
+    private static final Logger logger = LoggerFactory.getLogger(AuthService.class);
 
     private final UserRepository userRepository;
 

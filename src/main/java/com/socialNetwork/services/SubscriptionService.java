@@ -1,5 +1,6 @@
 package com.socialNetwork.services;
 
+import com.socialNetwork.controllers.PostController;
 import com.socialNetwork.dto.user.UserInfo;
 import com.socialNetwork.entities.Subscription;
 import com.socialNetwork.entities.user.User;
@@ -7,6 +8,8 @@ import com.socialNetwork.exceptions.DeveloperException;
 import com.socialNetwork.repositories.SubscriptionRepository;
 import com.socialNetwork.repositories.UserRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,10 +24,14 @@ public class SubscriptionService {
     private final SubscriptionRepository subscriptionRepository;
     private final UserRepository userRepository;
 
+    private final String LOG_TAG;
+    private static final Logger logger = LoggerFactory.getLogger(PostController.class);
+
     @Autowired
     public SubscriptionService(SubscriptionRepository subscriptionRepository, UserRepository userRepository) {
         this.subscriptionRepository = subscriptionRepository;
         this.userRepository = userRepository;
+        LOG_TAG = SubscriptionService.class.getName();
     }
 
     /**
@@ -64,16 +71,16 @@ public class SubscriptionService {
     @Transactional
     public void subscribe(Long userId, Long subscriberId) throws DeveloperException {
         if(subscriptionRepository.existsBySubscriberIdAndUserId(subscriberId, userId)){
-            log.warn("Subscription already exist");
+            logger.warn("[subscribe method] Subscription already exist");
             return;
         }
         User user = userRepository.findById(userId).orElseThrow(() -> {
-            String info = "UserId: " + userId + ", SubscriberId: " + subscriberId;
-            return new DeveloperException("SubscriptionService subscribe", info);
+            String info = "User with id: " + userId + " does not exist";
+            return new DeveloperException(LOG_TAG + " [subscribe method]", info);
         });
         User subscriber = userRepository.findById(subscriberId).orElseThrow(() -> {
-            String info = "UserId: " + userId + ", SubscriptionId: " + subscriberId;
-            return new DeveloperException("SubscriptionService subscribe", info);
+            String info = "Subscriber with id " + subscriberId + " does not exist";
+            return new DeveloperException(LOG_TAG + " [subscribe method]", info);
         });;
         Subscription subscription = new Subscription(user, subscriber);
         subscriptionRepository.save(subscription);
@@ -87,7 +94,7 @@ public class SubscriptionService {
     @Transactional
     public void unsubscribe(Long userId, Long subscriberId) {
         if(!subscriptionRepository.existsBySubscriberIdAndUserId(subscriberId, userId)){
-            log.warn("Subscription does not exist");
+            logger.warn("[unsubscribe method] Subscription does not exist");
         }
         subscriptionRepository.deleteBySubscriberIdAndUserId(subscriberId, userId);
     }
