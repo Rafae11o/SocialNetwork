@@ -89,10 +89,10 @@ public class CommentService {
     public String edit(Long userId, EditRequest commentEditRequest) throws DeveloperException {
         Comment comment = commentRepository.findById(commentEditRequest.getId()).orElseThrow(() -> {
             String info = "Comment with id " + commentEditRequest.getId() + " not founded";
-            return new DeveloperException(LOG_TAG + " [edit method]", info);
+            return new DeveloperException(LOG_TAG + " [edit]", info);
         });
         if(!Objects.equals(comment.getOwner().getId(), userId)) {
-            throw new DeveloperException(LOG_TAG + " [edit method]", "Illegal request");
+            throw new DeveloperException(LOG_TAG + " [edit]", "Illegal request");
         }
         comment.setText(commentEditRequest.getText());
         commentRepository.save(comment);

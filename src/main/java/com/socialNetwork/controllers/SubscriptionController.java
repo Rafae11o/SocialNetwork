@@ -34,7 +34,7 @@ public class SubscriptionController {
         CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication()
                 .getPrincipal();
         Long userId = userDetails.getId();
-        logger.info("[getSubscriptions method] for user with id from token: {}", userId);
+        logger.info("[getSubscriptions] for user with id from token: {}", userId);
         List<UserInfo> subscriptions = subscriptionService.getSubscriptions(userId);
         return ResponseEntity.ok(subscriptions);
     }
@@ -44,7 +44,7 @@ public class SubscriptionController {
         CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication()
                 .getPrincipal();
         Long userId = userDetails.getId();
-        logger.info("[getSubscribers method] for user with id from token: {}", userId);
+        logger.info("[getSubscribers] for user with id from token: {}", userId);
         List<UserInfo> subscribers = subscriptionService.getSubscribers(userId);
         return ResponseEntity.ok(subscribers);
     }
@@ -54,7 +54,7 @@ public class SubscriptionController {
         CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication()
                 .getPrincipal();
         Long subscriberId = userDetails.getId();
-        logger.info("[subscribe method] RequestBody SubscribeRequest: {}, subscriberId from token: {}", subscribeRequest, subscriberId);
+        logger.info("[subscribe] RequestBody SubscribeRequest: {}, subscriberId from token: {}", subscribeRequest, subscriberId);
         if(subscribeRequest.getSubscriptionId().equals(subscriberId)) {
             throw new DeveloperException("Subscription controller", "Users id are equal");
         }
@@ -68,7 +68,7 @@ public class SubscriptionController {
         CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication()
                 .getPrincipal();
         Long subscriberId = userDetails.getId();
-        logger.info("[unsubscribe method] RequestParam subscriptionId: {}, subscriberId from token: {}", subscriptionId, subscriberId);
+        logger.info("[unsubscribe] RequestParam subscriptionId: {}, subscriberId from token: {}", subscriptionId, subscriberId);
         subscriptionService.unsubscribe(subscriptionId, subscriberId);
         logger.info("Unsubscribe successfully");
         return ResponseEntity.ok(new SuccessResponse("Unsubscribe successfully"));

@@ -94,7 +94,7 @@ public class SubscriptionService {
     @Transactional
     public void unsubscribe(Long userId, Long subscriberId) {
         if(!subscriptionRepository.existsBySubscriberIdAndUserId(subscriberId, userId)){
-            logger.warn("[unsubscribe method] Subscription does not exist");
+            logger.warn("[unsubscribe] Subscription does not exist");
         }
         subscriptionRepository.deleteBySubscriberIdAndUserId(subscriberId, userId);
     }

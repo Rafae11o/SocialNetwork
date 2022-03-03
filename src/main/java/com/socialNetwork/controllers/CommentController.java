@@ -36,7 +36,7 @@ public class CommentController {
         CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication()
                 .getPrincipal();
         Long userId = userDetails.getId();
-        logger.info("[createComment method] RequestBody CreateCommentRequest: {}, userId from token: {}", commentInfo, userId);
+        logger.info("[createComment] RequestBody CreateCommentRequest: {}, userId from token: {}", commentInfo, userId);
         CommentInfo comment = commentService.create(userId, commentInfo);
         logger.info("Comment created successfully: {}", comment);
         return ResponseEntity.ok(new SuccessResponseWithData<>(comment));
@@ -44,7 +44,7 @@ public class CommentController {
 
     @GetMapping
     public ResponseEntity<SuccessResponseWithData<List<CommentInfo>>> getComments(@RequestParam("postId") Long postId){
-        logger.info("[getComments method] RequestParam postId: {}", postId);
+        logger.info("[getComments] RequestParam postId: {}", postId);
         List<CommentInfo> comments = commentService.getComments(postId);
         return ResponseEntity.ok(new SuccessResponseWithData<>(comments));
     }
@@ -54,7 +54,7 @@ public class CommentController {
         CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication()
                 .getPrincipal();
         Long userId = userDetails.getId();
-        logger.info("[deleteComment method] RequestParam commentId: {}, userId from token: {}", commentId.toString(), userId.toString());
+        logger.info("[deleteComment] RequestParam commentId: {}, userId from token: {}", commentId.toString(), userId.toString());
         commentService.delete(userId, commentId);
         logger.info("Comment deleted successfully");
         return ResponseEntity.ok(new SuccessResponse("Comment deleted successfully"));
@@ -65,7 +65,7 @@ public class CommentController {
         CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication()
                 .getPrincipal();
         Long userId = userDetails.getId();
-        logger.info("[/edit path], RequestBody EditRequest: {}, userId from token: {}", commentEditRequest, userId);
+        logger.info("[editComment], RequestBody EditRequest: {}, userId from token: {}", commentEditRequest, userId);
         String editedText = commentService.edit(userId, commentEditRequest);
         logger.info("Comment edited successfully");
         return ResponseEntity.ok(new SuccessResponseWithData<>(editedText));

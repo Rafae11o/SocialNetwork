@@ -1,6 +1,7 @@
 package com.socialNetwork.controllers;
 
 import com.socialNetwork.dto.RegistrationInfo;
+import com.socialNetwork.dto.TokenInfo;
 import com.socialNetwork.dto.response.SuccessResponse;
 import com.socialNetwork.dto.response.SuccessResponseWithData;
 import com.socialNetwork.exceptions.UserFriendlyException;
@@ -32,22 +33,21 @@ public class AuthController {
 
     @PostMapping("/registration")
     public ResponseEntity<SuccessResponse> registration(@RequestBody RegistrationInfo userInfo) throws UserFriendlyException {
-        logger.info("[registration path] RequestBody UserInfo: {}", userInfo);
         authService.createUser(userInfo);
         logger.info("Registration finished successfully");
         return ResponseEntity.ok(new SuccessResponse("Registered successfully"));
     }
 
     @GetMapping("/login")
-    public ResponseEntity<SuccessResponseWithData<String>> login(@RequestParam("login") String login,
+    public ResponseEntity<SuccessResponseWithData<TokenInfo>> login(@RequestParam("login") String login,
                                                          @RequestParam("password") String password) throws UserFriendlyException {
-        logger.info("Login RequestParam login: {}, password:{}", login, password);
+        logger.info("[login] RequestParam login: {}", login);
         authService.login(login, password);
         logger.info("Login finished successfully");
         logger.info("Generation token");
-        String token = jwtProvider.generateToken(login);
-        logger.info("Generated token: {}", token);
-        return ResponseEntity.ok(new SuccessResponseWithData<>(token));
+        TokenInfo tokenInfo = jwtProvider.generateToken(login);
+        logger.info("Generated token: {}", tokenInfo.getToken());
+        return ResponseEntity.ok(new SuccessResponseWithData<>(tokenInfo));
     }
 
 }

@@ -1,18 +1,25 @@
 package com.socialNetwork.services;
 
+import com.socialNetwork.controllers.PostController;
 import com.socialNetwork.dto.post.CreatePostRequest;
 import com.socialNetwork.dto.post.EditRequest;
 import com.socialNetwork.dto.post.PostDetails;
 import com.socialNetwork.dto.post.PostInfo;
+import com.socialNetwork.entities.Subscription;
 import com.socialNetwork.entities.post.Comment;
 import com.socialNetwork.entities.post.Post;
 import com.socialNetwork.entities.post.PostVisionPermission;
 import com.socialNetwork.entities.user.User;
 import com.socialNetwork.exceptions.DeveloperException;
+import com.socialNetwork.exceptions.UserFriendlyException;
 import com.socialNetwork.repositories.CommentRepository;
 import com.socialNetwork.repositories.PostRepository;
+import com.socialNetwork.repositories.SubscriptionRepository;
 import com.socialNetwork.repositories.UserRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -23,16 +30,23 @@ import java.util.Objects;
 @Service
 public class PostService {
 
+    private static final Logger logger = LoggerFactory.getLogger(PostService.class);
+
     private final PostRepository postRepository;
     private final UserRepository userRepository;
     private final CommentRepository commentRepository;
+    private final SimpMessagingTemplate simpMessagingTemplate;
     private final String LOG_TAG;
+    private SubscriptionRepository subscriptionRepository;
 
     @Autowired
-    public PostService(PostRepository postRepository, UserRepository userRepository, CommentRepository commentRepository){
+    public PostService(PostRepository postRepository, UserRepository userRepository, CommentRepository commentRepository,
+                       SimpMessagingTemplate simpMessagingTemplate, SubscriptionRepository subscriptionRepository){
         this.postRepository = postRepository;
         this.userRepository = userRepository;
         this.commentRepository = commentRepository;
+        this.simpMessagingTemplate = simpMessagingTemplate;
+        this.subscriptionRepository = subscriptionRepository;
         LOG_TAG = this.getClass().getName();
     }
 
@@ -47,7 +61,7 @@ public class PostService {
     public PostInfo createPost(Long owner_id, CreatePostRequest postInfo) throws Exception {
         User user = userRepository.findById(owner_id).orElseThrow(() -> {
             String info = "User with id " + owner_id + " not founded";
-            return new DeveloperException(LOG_TAG + " [createPost method]", info);
+            return new DeveloperException(LOG_TAG + " [createPost]", info);
         });
         Post post = new Post(user, postInfo);
         post = postRepository.save(post);
@@ -56,16 +70,20 @@ public class PostService {
 
     /**
      *
-     * @param id - post id
+     * @param postId - post id
      * @return post details(comments included)
      * @throws Exception
      */
-    public PostDetails findPost(Long id) throws Exception {
-        Post post = postRepository.findById(id).orElseThrow(() -> {
-            String info = "POst with id " + id + " not founded";
-            return new DeveloperException(LOG_TAG + " [findPost method]", info);
+    public PostDetails findPost(Long postId, Long userId) throws Exception {
+        Post post = postRepository.findById(postId).orElseThrow(() -> {
+            String info = "Post with id " + postId + " not founded";
+            return new DeveloperException(LOG_TAG + " [findPost]", info);
         });
-        List<Comment> comments = commentRepository.findAllByPostId(id);
+        if(post.getPostVisionPermission() == PostVisionPermission.SUBSCRIBED_USERS &&
+                !subscriptionRepository.existsBySubscriberIdAndUserId(userId, post.getOwner().getId())) {
+            throw new UserFriendlyException("Permission denied");
+        }
+        List<Comment> comments = commentRepository.findAllByPostId(postId);
         return new PostDetails(post, comments);
     }
 
@@ -76,7 +94,7 @@ public class PostService {
             return new DeveloperException(LOG_TAG + " [deletePost method]", info);
         });
         if(!Objects.equals(post.getOwner().getId(), userId)) {
-            throw new DeveloperException(LOG_TAG + " [deletePost method]", "Illegal request");
+            throw new DeveloperException(LOG_TAG + " [deletePost]", "Illegal request");
         }
         postRepository.deleteById(postId);
     }
@@ -85,10 +103,10 @@ public class PostService {
     public PostInfo updatePost(Long userId, EditRequest editRequest) throws Exception {
         Post post = postRepository.findById(editRequest.getId()).orElseThrow(() -> {
             String info = "Post with id " + editRequest.getId() + " not founded";
-            return new DeveloperException(LOG_TAG + " [updatePost method]", info);
+            return new DeveloperException(LOG_TAG + " [updatePost]", info);
         });
         if(!Objects.equals(post.getOwner().getId(), userId)) {
-            throw new DeveloperException(LOG_TAG + " [updatePost method]", "Illegal request");
+            throw new DeveloperException(LOG_TAG + " [updatePost]", "Illegal request");
         }
         post.setText(editRequest.getText());
         return new PostInfo(postRepository.save(post));
@@ -101,4 +119,17 @@ public class PostService {
     public List<String> getAvailablePermission() {
         return PostVisionPermission.names();
     }
+
+    /**
+     * Notify subscribers
+     * @param userId - owner of post
+     */
+    public void notifySubscribers(Long userId) {
+        List<Subscription> subscriptions = subscriptionRepository.findAllByUserId(userId);
+        for(Subscription subscription: subscriptions) {
+            logger.info("[notifySubscribers] Notifying subscriber with id {}", subscription.getId());
+            simpMessagingTemplate.convertAndSend("/posts/" + subscription.getId(), "New post is available");
+        }
+    }
+
 }

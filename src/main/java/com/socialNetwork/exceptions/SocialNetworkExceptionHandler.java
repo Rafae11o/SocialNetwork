@@ -1,6 +1,5 @@
 package com.socialNetwork.exceptions;
 
-import com.socialNetwork.controllers.UserController;
 import com.socialNetwork.dto.response.ErrorResponse;
 import io.jsonwebtoken.ExpiredJwtException;
 import lombok.extern.slf4j.Slf4j;

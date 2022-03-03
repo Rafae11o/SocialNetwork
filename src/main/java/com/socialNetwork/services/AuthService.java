@@ -29,6 +29,9 @@ public class AuthService {
      * @throws UserFriendlyException
      */
     public void createUser(RegistrationInfo userInfo) throws UserFriendlyException {
+        if(userRepository.existsByLogin(userInfo.getLogin())){
+            throw new UserFriendlyException("User with this login already exist");
+        }
         User user = new User(userInfo);
         userRepository.save(user);
     }

@@ -53,7 +53,7 @@ public class UserService {
     public UserFeed getFeed(Long currentUserId, Long userId) throws DeveloperException {
         User user = userRepository.findById(userId).orElseThrow(() -> {
             String info = "User with id " + userId + " does not exist";
-            return new DeveloperException(LOG_TAG + " [getFeed method]", info);
+            return new DeveloperException(LOG_TAG + " [getFeed]", info);
         });
         List<Post> posts;
         // If user is subscriber
