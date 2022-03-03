@@ -33,7 +33,7 @@ build/
 .vscode/
 
 ### FILES WITH PERSONALE DATA ###
-#/src/main/resources/application.yml
+/src/main/resources/application.yml
 
 ### LOG FILE ###
 /logs/
