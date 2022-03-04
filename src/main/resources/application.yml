@@ -1,18 +1,20 @@
 server:
-  port: 3000 # port of your application
+  port: 8080 # port of your application
 
 dev-mode:
   enable: true
-  expirationTimeInSeconds: 900
+  expirationTimeInSeconds: 2592000
 
 # database configuration
 spring:
+  main:
+    banner-mode: off
   jpa:
     hibernate:
       # create-drop - will drop your database every time when you start application
       # update will - only update your database
-      ddl-auto: create-drop
-#      ddl-auto: update
+#      ddl-auto: create-drop
+      ddl-auto: update
   datasource:
     url: "jdbc:postgresql://localhost:5432/socialNetwork" # url to database
     username: postgres # database username
@@ -27,11 +29,11 @@ jwt:
 
 logging:
   file:
-    path: logs
+    path: ./logs
   pattern:
     file: "%d [%thread] %-5level %logger{36} - %msg%n"
   logback:
     rollingpolicy:
       max-file-size: "10MB"
-      file-name-pattern: SocialNetwork-%d{yyyy-MM-dd}.%i.log.gz
+      file-name-pattern: ${logging.file.path}/archived/SocialNetwork-%d{yyyy-MM-dd}.%i.log.gz
       max-history: 1
