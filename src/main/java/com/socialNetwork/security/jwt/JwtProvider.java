@@ -1,5 +1,6 @@
 package com.socialNetwork.security.jwt;
 
+import com.socialNetwork.dto.TokenInfo;
 import com.socialNetwork.exceptions.UserFriendlyException;
 import io.jsonwebtoken.*;
 import lombok.extern.slf4j.Slf4j;
@@ -38,15 +39,16 @@ public class JwtProvider {
      * @param login - user login
      * @return - jwt token
      */
-    public String generateToken(String login){
+    public TokenInfo generateToken(String login){
         Long expirationTimeInSeconds = devMode ? expirationTimeInSecondsForDevMode : this.expirationTimeInSeconds;
         Date date = Date.from(LocalDateTime.now().plusSeconds(expirationTimeInSeconds).atZone(ZoneId.systemDefault()).toInstant());
         logger.info("Expiration date: {}, expiration time in seconds: {}", date, expirationTimeInSeconds);
-        return Jwts.builder()
+        String token =  Jwts.builder()
                 .setSubject(login)
                 .setExpiration(date)
                 .signWith(SignatureAlgorithm.HS512, jwtSecret)
                 .compact();
+        return new TokenInfo(token, date);
     }
 
     public boolean validateToken(String token) throws UserFriendlyException {
