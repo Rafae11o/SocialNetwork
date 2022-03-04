@@ -14,6 +14,8 @@ import java.util.Optional;
 public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByLogin(String login);
 
+    boolean existsByLogin(String login);
+
     @Query("SELECT p FROM User u INNER JOIN Post p ON u.id=p.owner.id WHERE u.id=?1 AND p.postVisionPermission='EVERYONE'")
     List<Post> findPostsForEveryone(@Param("userId") Long userId);
 
@@ -22,4 +24,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     @Query("SELECT p FROM User u INNER JOIN Post p ON u.id=p.owner.id WHERE u.id=?1")
     List<Post> findPostsForSubscribedUsers(@Param("userId") Long userId);
+
 }
