@@ -9,7 +9,6 @@ public enum PostVisionPermission {
     AUTHORIZED_USERS("AUTHORIZED_USERS"),
     SUBSCRIBED_USERS("SUBSCRIBED_USERS");
 
-
     private final String permission;
 
     PostVisionPermission(String permission) {

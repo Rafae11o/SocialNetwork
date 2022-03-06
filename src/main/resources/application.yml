@@ -13,12 +13,18 @@ spring:
     hibernate:
       # create-drop - will drop your database every time when you start application
       # update will - only update your database
-#      ddl-auto: create-drop
+#      ddl-auto: create-dro
       ddl-auto: update
   datasource:
     url: "jdbc:postgresql://localhost:5432/socialNetwork" # url to database
     username: postgres # database username
     password: 1234 # database password
+
+  jooq:
+    sql-dialect: Postgres
+  sql:
+    init:
+      platform: org.hibernate.dialect.PostgreSQL94Dialect
 
 # JWT configuration
 jwt:

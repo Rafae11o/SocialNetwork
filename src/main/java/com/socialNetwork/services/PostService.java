@@ -26,6 +26,7 @@ import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 public class PostService {
@@ -132,4 +133,7 @@ public class PostService {
         }
     }
 
+    public List<PostInfo> getNewestSubscriptionsPosts(Long userId) {
+        return postRepository.findNewestSubscriptionsPosts(userId).stream().map(PostInfo::new).collect(Collectors.toList());
+    }
 }

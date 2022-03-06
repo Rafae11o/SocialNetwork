@@ -104,4 +104,12 @@ public class PostController {
         return ResponseEntity.ok(postService.getAvailablePermission());
     }
 
+    @GetMapping("/getNewestSubscriptionsPosts")
+    public ResponseEntity<SuccessResponseWithData<List<PostInfo>>> getNewestSubscriptionsPosts() {
+        CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication()
+                .getPrincipal();
+        Long userId = userDetails.getId();
+        return ResponseEntity.ok(new SuccessResponseWithData<>(postService.getNewestSubscriptionsPosts(userId)));
+    }
+
 }

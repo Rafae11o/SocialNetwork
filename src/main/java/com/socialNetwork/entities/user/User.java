@@ -53,17 +53,24 @@ public class User extends BaseEntity {
 
     public void setName(String name) throws UserFriendlyException {
         String[] namePartsToToCheck = name.trim().split(" ");
-        StringBuilder nameInCorrectFormat = new StringBuilder();
         for(int i = 0; i<namePartsToToCheck.length; i++){
             if(!Validator.getValidator().containsOnlyLetters(namePartsToToCheck[i])){
                 throw new UserFriendlyException("Name have to contain only letters");
             }
+        }
+        this.name = name.toLowerCase();
+    }
+
+    public String getName() {
+        String[] namePartsToToCheck = name.trim().split(" ");
+        StringBuilder nameInCorrectFormat = new StringBuilder();
+        for(int i = 0; i<namePartsToToCheck.length; i++){
             nameInCorrectFormat.append(Converter.adjustCaseForName(namePartsToToCheck[i]));
             if(i < namePartsToToCheck.length - 1){
                 nameInCorrectFormat.append(" ");
             }
         }
-        this.name = nameInCorrectFormat.toString();
+        return nameInCorrectFormat.toString();
     }
 
     public void setPassword(String password) throws UserFriendlyException {
