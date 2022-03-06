@@ -2,6 +2,7 @@ package com.socialNetwork.controllers;
 
 import com.socialNetwork.dto.response.SuccessResponseWithData;
 import com.socialNetwork.dto.user.UserFeed;
+import com.socialNetwork.dto.user.UserInfo;
 import com.socialNetwork.exceptions.DeveloperException;
 import com.socialNetwork.security.CustomUserDetails;
 import com.socialNetwork.services.UserService;
@@ -14,6 +15,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.List;
 
 
 @Controller
@@ -47,6 +50,15 @@ public class UserController {
     public ResponseEntity<SuccessResponseWithData<UserFeed>> getUserFeedForUnauthorizedUser(@RequestParam("userId") Long userId) throws DeveloperException {
         logger.info("[getFeedForUnauthorizedUser method] RequestPara userId: {}", userId);
         return ResponseEntity.ok(new SuccessResponseWithData<>(userService.getFeed(userId)));
+    }
+
+    @GetMapping("/searchUsers")
+    public ResponseEntity<SuccessResponseWithData<List<UserInfo>>> searchUsers(@RequestParam("value") String value) {
+        logger.info("[searchUsers] RequestParam value: {}", value);
+        CustomUserDetails customUserDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Long currentUserId = customUserDetails.getId();
+        List<UserInfo> matchingUsers = userService.searchUsers(currentUserId, value);
+        return ResponseEntity.ok(new SuccessResponseWithData<>(matchingUsers));
     }
 
 }

@@ -1,6 +1,7 @@
 package com.socialNetwork.services;
 
 import com.socialNetwork.dto.user.UserFeed;
+import com.socialNetwork.dto.user.UserInfo;
 import com.socialNetwork.entities.post.Post;
 import com.socialNetwork.entities.user.User;
 import com.socialNetwork.exceptions.DeveloperException;
@@ -63,5 +64,9 @@ public class UserService {
             posts = userRepository.findPostsForAuthorizedUsers(userId);
         }
         return new UserFeed(user, posts);
+    }
+
+    public List<UserInfo> searchUsers(Long currentUserId, String value) {
+        return userRepository.findMatchingUsers(currentUserId, "%" + value.toLowerCase() + "%");
     }
 }
